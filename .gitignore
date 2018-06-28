@@ -12,6 +12,9 @@
 # api
 Api.json
 
+# DB
+DBkey.json
+
 # misc
 .DS_Store
 .env.local
