@@ -102,19 +102,22 @@ app.put('/image', (req, res) => {
 		.catch(err => res.status(400).json('Unable to get entries'));
 });		
 
+app.delete('/delete', (req, res) => {
+	const { id } = req.body;
 
-/*bcrypt.hash("bacon", null, null, function(err, hash) {
-    // Store hash in your password DB.
+	db('users')
+		.where('id', '=', id)
+		.del()
+		.returning('email')
+		.then(loginEmail => {
+			db('login')
+				.where('email', '=', loginEmail[0])
+				.del()
+				.returning('email')
+				.then(data => res.status(200).josn('success'))
+				.catch(err => res.status(400).json(err));
+		})
 });
-
-// Load hash from your password DB.
-bcrypt.compare("bacon", hash, function(err, res) {
-    // res == true
-});
-bcrypt.compare("veggies", hash, function(err, res) {
-    // res = false
-});*/
-
 
 app.listen(3000, () => {
 	console.log('app is running on port 3000');
