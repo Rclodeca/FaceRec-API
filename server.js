@@ -8,6 +8,7 @@ const DBkey = require('./DBkey.json');
 const register = require('./controllers/register.js'); 
 const signin = require('./controllers/signin.js');
 const profile = require('./controllers/profile.js');
+const image = require('./controllers/image.js');
 
 
 const db = knex({
@@ -20,18 +21,13 @@ const db = knex({
   }
 });
 
-/*db.select('*').from('users').then(data => {
-	console.log(data);
-});*/
 
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
 
-app.get('/', (req, res) => {
-	res.send(database.users); 
-})
+app.get('/', (req, res) => res.send(database.users) );
 
 app.post('/signin', (req, res) => signin.handleSignin(req, res, db, bcrypt) );
 
@@ -39,17 +35,7 @@ app.post('/register', (req, res) => register.handleRegister(req, res, db, bcrypt
 
 app.get('/profile/:id', (req, res) => profile.handleProfileGet(req, res, db) );
 
-app.put('/image', (req, res) => {
-	const { id } = req.body;
-	
-	db('users').where('id', '=', id)
-		.increment('entries', 1)
-		.returning('entries')
-		.then(entries => {
-			res.json(entries[0]);
-		})
-		.catch(err => res.status(400).json('Unable to get entries'));
-});		
+app.put('/image', (req, res) => image.handleImage(req, res, db) );		
 
 app.delete('/delete', (req, res) => {
 	const { id } = req.body;
