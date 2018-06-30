@@ -9,6 +9,7 @@ const register = require('./controllers/register.js');
 const signin = require('./controllers/signin.js');
 const profile = require('./controllers/profile.js');
 const image = require('./controllers/image.js');
+const deleteUser = require('./controllers/deleteUser.js');
 
 
 const db = knex({
@@ -37,22 +38,7 @@ app.get('/profile/:id', (req, res) => profile.handleProfileGet(req, res, db) );
 
 app.put('/image', (req, res) => image.handleImage(req, res, db) );		
 
-app.delete('/delete', (req, res) => {
-	const { id } = req.body;
-
-	db('users')
-		.where('id', '=', id)
-		.del()
-		.returning('email')
-		.then(loginEmail => {
-			db('login')
-				.where('email', '=', loginEmail[0])
-				.del()
-				.returning('email')
-				.then(data => res.status(200).josn('success'))
-				.catch(err => res.status(400).json(err));
-		})
-});
+app.delete('/delete', (req, res) => deleteUser.handleDeleteUser(req, res, db) );
 
 app.listen(3000, () => {
 	console.log('app is running on port 3000');
