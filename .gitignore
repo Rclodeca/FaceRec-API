@@ -10,7 +10,7 @@
 /build
 
 # api
-Api.json
+api.json
 
 # DB
 DBkey.json
